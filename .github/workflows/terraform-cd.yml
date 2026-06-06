@@ -99,7 +99,9 @@ jobs:
   apply-dev:
     name: Terraform Apply (dev)
     needs: [terraform-fmt, terraform-validate, terraform-plan]
-    if: github.event_name == 'push' && github.fer == 'refs/heads/main'
+    if: | 
+      github.fer == 'refs/heads/main' && 
+      (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true))
     runs-on: ubuntu-latest
     environment: dev
     defaults:
@@ -133,7 +135,9 @@ jobs:
   apply-staging:
     name: Terraform Apply (staging)
     needs: apply-dev
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: | 
+      github.fer == 'refs/heads/main' && 
+      (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true))
     runs-on: ubuntu-latest
     environment: staging
     defaults:
